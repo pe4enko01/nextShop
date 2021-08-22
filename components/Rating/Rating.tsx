@@ -23,7 +23,7 @@ export const Rating = ({isEditable="false", rating, setRaring, className, ...pro
                 [styles.editable]: isEditable
             })}
             onMouseEnter={() => changeDisplay(i + 1)}
-            onMouseleave={() => changeDisplay(rating)}
+            onMouseLeave={() => changeDisplay(rating)}
             onClick={()=>{onClick(i+1)}}
             
 
