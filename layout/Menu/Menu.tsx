@@ -4,7 +4,7 @@ import {format} from 'date-fns'
 import styles from './Menu.module.css';
 //import { useContext } from "react";
 import { AppContext } from "../../context/app.contex";
-import { FirstLevelMenuItem } from "../../interfaces/menu.interfaces";
+import { FirstLevelMenuItem, PageItem } from "../../interfaces/menu.interfaces";
 import { TopLevelCategory } from "../../interfaces/page.interface";
 
 
@@ -14,23 +14,60 @@ const firstLevelMenu: FirstLevelMenuItem[] = [
     <path d="M24 15.4055C24 14.4901 23.4104 13.7169 22.5938 13.4257V6.14159L24 5.56179L12 0.74707L0 5.56179L12 10.3766L21.1875 6.70624V13.4257C20.3708 13.7169 19.7812 14.4901 19.7812 15.4055C19.7812 16.2437 20.2762 16.9631 20.986 17.3031L19.8177 20.8081L21.1511 21.253L21.8906 19.0345L22.6301 21.253L23.9636 20.8081L22.7953 17.3031C23.505 16.9632 24 16.2437 24 15.4055Z" fill="#7653FC"/>
     </svg>
     , id:TopLevelCategory.Courses},
-    {route:'services', name:"Сервисы",icon:, id:TopLevelCategory.Services},
-    {route:'books', name:"Книги",icon:, id:TopLevelCategory.Books},
-    {route:'products', name:"Продукты",icon:, id:TopLevelCategory.Products}
+    {route:'services', name:"Сервисы",icon:<div>l</div>, id:TopLevelCategory.Services},
+    {route:'books', name:"Книги",icon:<div>l</div>, id:TopLevelCategory.Books},
+    {route:'products', name:"Продукты",icon:<div>l</div>, id:TopLevelCategory.Products}
 ];
 export const Menu= ():JSX.Element => {
     const {menu, setMenu, firstCategory} = useContext(AppContext);
 
     const buitlFirstLevel = () => {
-
+        return (
+            <>
+                {firstLevelMenu.map(menu => (
+                    <div key={menu.route}>
+                        <a href={`/${menu.route}`}>
+                            <div className={cn(styles.firstLevel, {
+                                [styles.firstLevelActive]: menu.id == firstCategory
+                            })}>
+                                {menu.icon}
+                                <span>{menu.name}</span>
+                            </div>
+                        </a>
+                        {menu.id == firstCategory && buitlSrcondLevel(menuItem)}
+                    </div>
+                ))}
+            </>
+        )
     }
 
-    const buitlSrcondLevel = () => {
-        
+    const buitlSrcondLevel = (menuItem: FirstLevelMenuItem) => {
+        return(
+            <div>
+                {menu.map(m => (
+                    <div key = {m._id.secondCategory}>
+                        <div className={styles.secondLevel}>
+                            {m._id.secondCategory}
+                            <div className={cn.(styles.secondLevelBlock),
+                                [styles.secondLevelBlockOpened]: m.isOpened;
+                            }>
+                                {buitlThirdLevel(m.pages, menuItem.route)}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        )
     }
 
-    const buitlThirdLevel = () => {
-        
+    const buitlThirdLevel = (pages: PageItem[], route: string) => {
+        return(
+            pages.map(p => {
+                <a href = {`/${route}/${p.alias}`}>
+
+                </a>
+            })
+            )
     }
    return(
        <div>
