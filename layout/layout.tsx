@@ -6,6 +6,7 @@ import { Header } from "./Header/Header";
 import { Sidebar } from "./Sidebar/Sidebar";
 import { Footer } from "./Footer/Footer";
 import { AppContextProvider } from "../context/app.contex";
+import { IAppContext } from "../context/app.contex";
 
 export const Layout= ({children}:LayoutProps):JSX.Element => {
    return(
