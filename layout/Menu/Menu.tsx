@@ -6,7 +6,8 @@ import styles from './Menu.module.css';
 import { AppContext } from "../../context/app.contex";
 import { FirstLevelMenuItem, PageItem } from "../../interfaces/menu.interfaces";
 import { TopLevelCategory } from "../../interfaces/page.interface";
-
+import Link from 'next/link';
+import { useRouter } from "next/dist/client/router";
 
 const firstLevelMenu: FirstLevelMenuItem[] = [
     {route:'courses', name:"Курсы",
@@ -41,20 +42,24 @@ const firstLevelMenu: FirstLevelMenuItem[] = [
 ];
 export const Menu= ():JSX.Element => {
     const {menu, setMenu, firstCategory} = useContext(AppContext);
+    const router = useRouter();
 
     const buitlFirstLevel = () => {
         return (
             <>
                 {firstLevelMenu.map(m => (
+                    
                     <div key={m.route}>
-                        <a href={`/${m.route}`}>
-                            <div className={cn(styles.firstLevel, {
-                                [styles.firstLevelActive]: m.id == firstCategory
-                            })}>
-                                {m.icon}
-                                <span>{m.name}</span>
-                            </div>
-                        </a>
+                        <Link href={`/${m.route}`}>
+                            <a>
+                                <div className={cn(styles.firstLevel, {
+                                    [styles.firstLevelActive]: m.id == firstCategory
+                                })}>
+                                    {m.icon}
+                                    <span>{m.name}</span>
+                                </div>
+                            </a>
+                        </Link>
                         {m.id == firstCategory && buitlSrcondLevel(m)}
                     </div>
                 ))}
@@ -65,18 +70,25 @@ export const Menu= ():JSX.Element => {
     const buitlSrcondLevel = (menuItem: FirstLevelMenuItem) => {
         return(
             <div className={styles.secondBlock}>
-                {menu.map(m => (
+                {menu.map(m => {
+                    if(m.pages.map(p=>p.alias).includes(router.asPath.split('/')[2])){
+                        m.isopened = true;
+                    }
+                    return(
+
                     <div key = {m._id.secondCategory}>
                         <div className={styles.secondLevel}>
                             {m._id.secondCategory}
+                        </div>
                             <div className={cn(styles.secondLevelBlock,{
                                 [styles.secondLevelBlockOpened]: m.isopened
                             })}>
                                 {buitlThirdLevel(m.pages, menuItem.route)}
                             </div>
                         </div>
-                    </div>
-                ))}
+                    
+                    )
+                    })}
             </div>
         )
     }
@@ -84,11 +96,13 @@ export const Menu= ():JSX.Element => {
     const buitlThirdLevel = (pages: PageItem[], route: string) => {
         return(
             pages.map(p => {
+                <Link href = {`/${route}/${p.alias}`}>
                 <a href = {`/${route}/${p.alias}`} className={cn(styles.thirdLevel,{
                     [styles.thirdLevelActive]: true
                 })}>
                     {p.category}
                 </a>
+                </Link>
             })
             )
     }
